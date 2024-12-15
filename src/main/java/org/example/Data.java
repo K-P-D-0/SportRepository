@@ -28,4 +28,9 @@ public class Data {
     public Integer getYear() {
         return year;
     }
+
+    @Override
+    public String toString() {
+        return day.toString() + "." + month.toString() + "." + year.toString();
+    }
 }
