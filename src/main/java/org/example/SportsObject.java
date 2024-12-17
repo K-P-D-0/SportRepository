@@ -4,9 +4,9 @@ public class SportsObject {
     private final String name;
     private final String subject ;
     private final String address;
-    private final Data date;
+    private final Date date;
 
-    public SportsObject(String name, String subject, String address, Data date) {
+    public SportsObject(String name, String subject, String address, Date date) {
         this.name = name;
         this.subject = subject;
         this.address = address;
@@ -25,7 +25,7 @@ public class SportsObject {
         return address;
     }
 
-    public Data getDate() {
+    public Date getDate() {
         return date;
     }
 }

@@ -1,17 +1,17 @@
 package org.example;
 
-public class Data {
+public class Date {
     private final Integer day;
     private final Integer month;
     private final Integer year;
 
-    public Data() {
+    public Date() {
         day = 0;
         month = 0;
         year = 0;
     }
 
-    public Data(Integer day, Integer month, Integer year) {
+    public Date(Integer day, Integer month, Integer year) {
         this.day = day;
         this.month = month;
         this.year = year;

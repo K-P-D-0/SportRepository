@@ -16,14 +16,13 @@ public class DataBaseHandler {
         conn = DriverManager.getConnection("jdbc:sqlite:SportsObjects.s3db");
     }
 
-    public static void CreateTable(String name, List<SportsObject> sportsObjects) throws ClassNotFoundException, SQLException
+    public static void CreateTable(String name, List<SportsObject> sportsObjects) throws SQLException
     {
         statmt = conn.createStatement();
         DatabaseMetaData metaData = conn.getMetaData();
         var createdTable = true;
         ResultSet rs = metaData.getTables(null, null, "%", new String[]{"TABLE"});
         while (rs.next()) {
-            var a = rs.getString("TABLE_NAME");
             if (Objects.equals(rs.getString("TABLE_NAME"), name))
                 createdTable = false;
         }
@@ -40,17 +39,21 @@ public class DataBaseHandler {
         }
     }
 
-    public static void SelectDB(String query) throws ClassNotFoundException, SQLException
+    public static Map<String, Integer> SelectDB(String query) throws SQLException
     {
-// доделать
-//        resSet = statmt.executeQuery(query);
-//        Dictionary<String, Integer> result = new Hashtable<>();
-//        while(resSet.next()) {
-//
-//        }
+        resSet = statmt.executeQuery(query);
+        Map<String, Integer> result = new Hashtable<>();
+        while(resSet.next()) {
+            var key = resSet.getString("subject");
+            if (result.containsKey(key))
+                result.put(key, result.get(key) + 1);
+            else
+                result.put(key, 1);
+        }
+        return result;
     }
 
-    public static void CloseDB() throws ClassNotFoundException, SQLException
+    public static void CloseDB() throws SQLException
     {
         conn.close();
         statmt.close();

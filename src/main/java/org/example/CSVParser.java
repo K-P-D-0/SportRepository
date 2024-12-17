@@ -1,10 +1,6 @@
 package org.example;
 
-import com.opencsv.CSVParserBuilder;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.exceptions.CsvException;
-
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,46 +9,51 @@ import java.util.List;
 public class CSVParser {
     public static List<SportsObject> Parsing(String file) {
         List<SportsObject> sportsObjects = new ArrayList<>();
-        try {
-            FileReader fileReader = new FileReader(file);
-
-            var csvParser = new CSVParserBuilder()
-                    .withSeparator(',')
-                    .withQuoteChar('"')
-                    .withIgnoreQuotations(true)
-                    .build();
-
-            try (CSVReader csvReader = new CSVReaderBuilder(fileReader)
-                    .withCSVParser(csvParser)
-                    .withSkipLines(1)
-                    .build()) {
-
-                List<String[]> records = csvReader.readAll();
-
-                for (String[] record : records) {
-                    String name = record[1];
-                    String subject = record[2];
-                    String address = record[3];
-                    Data data = new Data();
-                    for (int i = 4; i < record.length; i++) {
-                        if (i != record.length - 1)
-                            address += ", " + record[i];
-                        else if (record[i] != "") {
-                            var dataSplit = record[i].split("\\.");
-                            var day = Integer.parseInt(dataSplit[0]);
-                            var month = Integer.parseInt(dataSplit[1]);
-                            var year = Integer.parseInt(dataSplit[2]);
-                            data = new Data(day, month, year);
-                        }
-                    }
-                    sportsObjects.add(new SportsObject(name, subject, address, data));
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            var isFirstLine = true;
+            while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
                 }
-            } catch (CsvException e) {
-                throw new RuntimeException(e);
+                var sportsObject = parseLine(line.substring(line.indexOf(",") + 1));
+                var name = sportsObject.getFirst();
+                var subject = sportsObject.get(1);
+                var address = sportsObject.get(2);
+                var date = new Date();
+                if (sportsObject.get(3).split("\\.").length == 3){
+                    var day = Integer.parseInt(sportsObject.get(3).split("\\.")[0]);
+                    var month = Integer.parseInt(sportsObject.get(3).split("\\.")[1]);
+                    var year = Integer.parseInt(sportsObject.get(3).split("\\.")[2]);
+                    date = new Date(day, month, year);
+                }
+                sportsObjects.add(new SportsObject(name, subject, address, date));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return sportsObjects;
+    }
+
+    private static List<String> parseLine(String line) {
+        StringBuilder field = new StringBuilder();
+        List<String> result = new ArrayList<>();
+        var index = -1;
+        var charArray = line.toCharArray();
+        for (char c : charArray) {
+            index += 1;
+            if ((',' == c && (index == charArray.length - 1 || index == 0)) ||
+                    (',' == c && charArray[index + 1] != ' ' && !Character.isDigit(charArray[index + 1]) && !Character.isLetter(charArray[index + 1]) &&
+                            !Character.isDigit(charArray[index - 1]) && !Character.isLetter(charArray[index - 1]))) {
+                result.add(field.toString());
+                field = new StringBuilder();
+            } else {
+                if (c != '\"')
+                    field.append(c);
+            }
+        }
+        result.add(field.toString());
+        return result;
     }
 }
