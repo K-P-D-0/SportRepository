@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CSVParser {
     public static List<SportsObject> Parsing(String file) {
@@ -20,6 +21,8 @@ public class CSVParser {
                 var sportsObject = parseLine(line.substring(line.indexOf(",") + 1));
                 var name = sportsObject.getFirst();
                 var subject = sportsObject.get(1);
+                if (Objects.equals(subject, "г. Москва") || Objects.equals(subject, "Московская область"))
+                    subject = "Москва";
                 var address = sportsObject.get(2);
                 var date = new Date();
                 if (sportsObject.get(3).split("\\.").length == 3){

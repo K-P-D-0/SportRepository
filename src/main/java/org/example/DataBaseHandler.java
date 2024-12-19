@@ -42,13 +42,11 @@ public class DataBaseHandler {
     public static Map<String, Integer> SelectDB(String query) throws SQLException
     {
         resSet = statmt.executeQuery(query);
-        Map<String, Integer> result = new Hashtable<>();
+        Map<String, Integer> result = new LinkedHashMap<>();
         while(resSet.next()) {
             var key = resSet.getString("subject");
-            if (result.containsKey(key))
-                result.put(key, result.get(key) + 1);
-            else
-                result.put(key, 1);
+            var value = resSet.getString("count");
+            result.put(key, Integer.parseInt(value));
         }
         return result;
     }
