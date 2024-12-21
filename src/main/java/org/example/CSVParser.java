@@ -23,6 +23,8 @@ public class CSVParser {
                 var subject = sportsObject.get(1);
                 if (Objects.equals(subject, "г. Москва") || Objects.equals(subject, "Московская область"))
                     subject = "Москва";
+                if (Objects.equals(subject, ""))
+                    subject = "Нет данных";
                 var address = sportsObject.get(2);
                 var date = new Date();
                 if (sportsObject.get(3).split("\\.").length == 3){

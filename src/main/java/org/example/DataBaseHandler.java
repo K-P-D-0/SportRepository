@@ -39,14 +39,14 @@ public class DataBaseHandler {
         }
     }
 
-    public static Map<String, Integer> SelectDB(String query) throws SQLException
+    public static Map<String, Double> SelectDB(String query) throws SQLException
     {
         resSet = statmt.executeQuery(query);
-        Map<String, Integer> result = new LinkedHashMap<>();
+        Map<String, Double> result = new LinkedHashMap<>();
         while(resSet.next()) {
             var key = resSet.getString("subject");
             var value = resSet.getString("count");
-            result.put(key, Integer.parseInt(value));
+            result.put(key, Double.parseDouble(value));
         }
         return result;
     }

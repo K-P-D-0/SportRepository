@@ -24,12 +24,12 @@ public class Graph extends ApplicationFrame {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public Graph(String title, Map<String, Integer> value) {
+    public Graph(String title, Map<String, Double> value) {
         super(title);
         setContentPane(createDemoPanel(value));
     }
 
-    public JPanel createDemoPanel(Map<String, Integer> value) {
+    public JPanel createDemoPanel(Map<String, Double> value) {
         CategoryDataset dataset = createDataset(value);
         JFreeChart chart = createChart(dataset);
         chart.setPadding(new RectangleInsets(4, 4, 2, 2));
@@ -40,7 +40,7 @@ public class Graph extends ApplicationFrame {
         return chartPanel;
     }
 
-    private CategoryDataset createDataset(Map<String, Integer> value) {
+    private CategoryDataset createDataset(Map<String, Double> value) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (var key: value.keySet())
             dataset.addValue(value.get(key), key, "");
